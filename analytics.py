@@ -36,22 +36,24 @@ def longest_streak_certain_habit(db, habit_name, habit_periodicity):
     sessions = get_sessions_data(db, habit_name)
     every_new_streak = {0}
     habit = Habit(habit_name, "no description", habit_periodicity)
-    for session in sessions:
+    for i, session in enumerate(sessions):
+        previous_session = sessions[i-1]
+        sessions[-1] = "starting session", "2022-02-02"
+        session = sessions[i]
         session_datetime = datetime.strptime(session[1], "%Y-%m-%d")
-        for i, next_session in enumerate(sessions, start=1):
-            next_session_datetime = datetime.strptime(next_session[1], "%Y-%m-%d")
-            if habit_periodicity == "daily":
-                if session_datetime == next_session_datetime - timedelta(days=1) is True:
-                    habit.increment_streak_count()
-                    every_new_streak.add(habit.streak_count)
-                else:
-                    habit.reset_streak_count()
+        previous_session_datetime = datetime.strptime(previous_session[1], "%Y-%m-%d")
+        if habit_periodicity == "daily":
+            if session_datetime == previous_session_datetime + timedelta(days=1) is True:
+                habit.increment_streak_count()
+                every_new_streak.add(habit.streak_count)
             else:
-                if session_datetime >= next_session_datetime - timedelta(days=7) is True:
-                    habit.increment_streak_count()
-                    every_new_streak.add(habit.streak_count)
-                else:
-                    habit.reset_streak_count()
+                habit.reset_streak_count()
+        else:
+            if session_datetime >= previous_session_datetime + timedelta(days=7) is True:
+                habit.increment_streak_count()
+                every_new_streak.add(habit.streak_count)
+            else:
+                habit.reset_streak_count()
     for streaks in every_new_streak:
         x = 0
         while x > streaks:
