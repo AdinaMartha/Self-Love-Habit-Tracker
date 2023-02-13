@@ -1,4 +1,4 @@
-from db import get_sessions_data, get_habits_data, get_daily_habits_data
+from db import get_sessions_data, get_daily_habits_data, get_weekly_habits_data, get_description_data, get_habits_data
 from datetime import datetime, timedelta
 from habit import Habit
 
@@ -10,55 +10,90 @@ def calculate_count(db, habit_name):
     :param habit_name: name of the habit present in the DB
     :return: length of the sessions list
     """
-    session_count_data = get_sessions_data(db, habit_name)
-    return len(session_count_data)
+    sessions_data = get_sessions_data(db, habit_name)
+    return len(sessions_data)
 
 
 def print_habits(db):
-    all_habits = get_habits_data(db)
-    for x in all_habits:
+    habits_data = get_habits_data(db)
+    for x in habits_data:
         print(x)
 
 
 def print_daily_habits(db):
-    all_daily_habits = get_daily_habits_data(db)
-    for x in all_daily_habits:
+    daily_habits_data = get_daily_habits_data(db)
+    for x in daily_habits_data:
         print(x)
 
 
 def print_weekly_habits(db):
-    all_weekly_habits = get_daily_habits_data(db)
-    for x in all_weekly_habits:
+    weekly_habits_data = get_weekly_habits_data(db)
+    for x in weekly_habits_data:
         print(x)
 
 
-def longest_streak_certain_habit(db, habit_name, habit_periodicity):
-    sessions = get_sessions_data(db, habit_name)
-    every_new_streak = {0}
-    habit = Habit(habit_name, "no description", habit_periodicity)
-    for i in range(len(sessions)):
-        all_previous_session = sessions[i-1]
-        sessions[-1] = "starting session", "2022-02-02"
-        all_session = sessions[i]
-        all_session_datetime = datetime.strptime(all_session[1], "%Y-%m-%d")
-        all_previous_session_datetime = datetime.strptime(all_previous_session[1], "%Y-%m-%d")
-        if habit_periodicity == "daily":
-            if all_session_datetime == all_previous_session_datetime + timedelta(days=1) is True:
+def longest_streak_specific_habit(db, habit_name, habit_periodicity):
+    highest_streak = 0
+    sessions_data = get_sessions_data(db, habit_name)
+    habit_description = get_description_data(db, habit_name)
+    habit = Habit(habit_name, habit_description, habit_periodicity)
+    if habit_periodicity == "daily":
+        for i in range(len(sessions_data)):
+            every_previous_session = sessions_data[i-1]
+            every_session = sessions_data[i]
+            every_session_datetime = datetime.strptime(every_session[1], "%Y-%m-%d")
+            every_previous_session_datetime = datetime.strptime(every_previous_session[1], "%Y-%m-%d")
+            if every_session_datetime <= every_previous_session_datetime + timedelta(days=1):
                 habit.increment_streak_count()
-                every_new_streak.add(habit.streak_count)
+                if habit.streak_count > highest_streak:
+                    highest_streak = habit.streak_count
             else:
                 habit.reset_streak_count()
-        else:
-            if all_session_datetime >= all_previous_session_datetime + timedelta(days=7) is True:
+        return highest_streak
+    else:
+        for i in range(len(sessions_data)):
+            every_previous_session = sessions_data[i-1]
+            every_session = sessions_data[i]
+            every_session_datetime = datetime.strptime(every_session[1], "%Y-%m-%d")
+            every_previous_session_datetime = datetime.strptime(every_previous_session[1], "%Y-%m-%d")
+            if every_session_datetime <= every_previous_session_datetime + timedelta(days=7):
                 habit.increment_streak_count()
-                every_new_streak.add(habit.streak_count)
+                if habit.streak_count > highest_streak:
+                    highest_streak = habit.streak_count
             else:
                 habit.reset_streak_count()
-    for streaks in every_new_streak:
-        x = 0
-        while x > streaks:
-            print(str(x-1))
-            x += 1
-            if x > (streaks+1):
-                break
+        return highest_streak
 
+
+def longest_streak_all_habits(db):
+    highest_streak = 0
+    habits_data = get_habits_data(db)
+    for x in range(len(habits_data)):
+        every_habit = habits_data[x]
+        sessions_data = get_sessions_data(db, every_habit[0])
+        habit = Habit(every_habit[0], every_habit[1], every_habit[2])
+        if every_habit[2] == "daily":
+            for i in range(len(sessions_data)):
+                every_previous_session = sessions_data[i - 1]
+                every_session = sessions_data[i]
+                every_session_datetime = datetime.strptime(every_session[1], "%Y-%m-%d")
+                every_previous_session_datetime = datetime.strptime(every_previous_session[1], "%Y-%m-%d")
+                if every_session_datetime <= every_previous_session_datetime + timedelta(days=1):
+                    habit.increment_streak_count()
+                    if habit.streak_count > highest_streak:
+                        highest_streak = habit.streak_count
+                else:
+                    habit.reset_streak_count()
+        else:
+            for i in range(len(sessions_data)):
+                every_previous_session = sessions_data[i - 1]
+                every_session = sessions_data[i]
+                every_session_datetime = datetime.strptime(every_session[1], "%Y-%m-%d")
+                every_previous_session_datetime = datetime.strptime(every_previous_session[1], "%Y-%m-%d")
+                if every_session_datetime <= every_previous_session_datetime + timedelta(days=7):
+                    habit.increment_streak_count()
+                    if habit.streak_count > highest_streak:
+                        highest_streak = habit.streak_count
+                else:
+                    habit.reset_streak_count()
+    print(highest_streak)
