@@ -1,5 +1,4 @@
 from db import add_habit, add_session, remove_habit
-from datetime import date
 
 
 class Habit:
@@ -50,8 +49,3 @@ class Habit:
         :return:
         """
         remove_habit(db, habit_name)
-
-
-
-
-
