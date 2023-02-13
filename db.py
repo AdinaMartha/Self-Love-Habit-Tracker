@@ -77,12 +77,6 @@ def remove_habit(db, habit_name):
     db.commit()
 
 
-def get_habits_data(db):
-    cur = db.cursor()
-    cur.execute("SELECT * FROM habits")
-    return cur.fetchall()
-
-
 def get_daily_habits_data(db, habit_periodicity="daily"):
     cur = db.cursor()
     cur.execute("SELECT * FROM habits WHERE habit_periodicity=?", (habit_periodicity, ))
@@ -95,6 +89,12 @@ def get_weekly_habits_data(db, habit_periodicity="weekly"):
     return cur.fetchall()
 
 
-def get_next_sessions_data(db, habit_name):
+def get_description_data(db, habit_name):
     cur = db.cursor()
-    cur.execute("SELECT (*+1) FROM sessions")
+    cur.execute("SELECT habit_description FROM habits WHERE habit_name=?", (habit_name, ))
+
+
+def get_habits_data(db):
+    cur = db.cursor()
+    cur.execute("SELECT * FROM habits")
+    return cur.fetchall()
