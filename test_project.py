@@ -1,5 +1,5 @@
 from habit import Habit
-from db import get_db, add_habit, add_session, get_sessions_data, get_habits_data
+from db import get_db, add_habit, add_session, get_sessions_data
 from analytics import calculate_count
 import os
 
