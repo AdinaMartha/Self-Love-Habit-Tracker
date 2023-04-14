@@ -2,8 +2,8 @@ import questionary
 from db import get_db, add_habit, add_session
 import os
 from habit import Habit
-from analytics import print_habits, print_daily_habits, print_weekly_habits, longest_streak_specific_habit, \
-    longest_streak_all_habits
+from analytics import print_habits, print_daily_habits, print_weekly_habits, calculate_longest_run_streak_specific_habit, \
+    calculate_longest_run_streak_all_habits
 
 
 def cli():
@@ -108,7 +108,7 @@ def cli():
             elif choice == "View all habits to be repeated once in a week.":
                 print_weekly_habits(db)
 
-            elif choice == "Check the longest streak.":
+            elif choice == "Check the longest run streak.":
                 choice = questionary.select(
                     "Do you want to check the streak for a daily or weekly habit or for all habits?",
                     choices=["daily", "weekly", "all"]
@@ -116,14 +116,14 @@ def cli():
 
                 if choice == "daily":
                     habit_name = questionary.text("What's the name of the habit?").ask()
-                    longest_streak_specific_habit(db, habit_name, "daily")
+                    calculate_longest_run_streak_specific_habit(db, habit_name, "daily")
 
                 if choice == "weekly":
                     habit_name = questionary.text("What's the name of the habit?").ask()
-                    longest_streak_specific_habit(db, habit_name, "weekly")
+                    calculate_longest_run_streak_specific_habit(db, habit_name, "weekly")
 
                 else:
-                    longest_streak_all_habits(db)
+                    calculate_longest_run_streak_all_habits(db)
 
             else:
                 print("Until next time!")
@@ -176,7 +176,7 @@ def cli():
                 db = get_db("main.db")
                 print_weekly_habits(db)
 
-            elif choice == "Check my longest streak.":
+            elif choice == "Check my longest run streak.":
 
                 choice = questionary.select(
                     "Do you want to check your streak for a specific habit or for all habits?",
@@ -185,14 +185,14 @@ def cli():
 
                 if choice == "daily":
                     habit_name = questionary.text("What's the name of the habit?").ask()
-                    longest_streak_specific_habit(db, habit_name, "daily")
+                    calculate_longest_run_streak_specific_habit(db, habit_name, "daily")
 
                 if choice == "weekly":
                     habit_name = questionary.text("What's the name of the habit?").ask()
-                    longest_streak_specific_habit(db, habit_name, "weekly")
+                    calculate_longest_run_streak_specific_habit(db, habit_name, "weekly")
 
                 else:
-                    longest_streak_all_habits(db)
+                    calculate_longest_run_streak_all_habits(db)
 
             elif choice == "Delete an existing habit.":
                 habit_name = questionary.text("What's the name of the habit you want to delete?").ask()
