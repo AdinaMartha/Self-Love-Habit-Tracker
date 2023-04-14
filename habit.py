@@ -13,7 +13,6 @@ class Habit:
         self.habit_description = habit_description
         self.habit_periodicity = habit_periodicity
         self.streak_count = 0
-
         
     def store_habit(self, db):
         """
@@ -22,7 +21,6 @@ class Habit:
         :return: calls the add_habit function with the habit object
         """
         add_habit(db, self.habit_name, self.habit_description, self.habit_periodicity)
-
         
     def store_session(self, db, session_date: str = None):
         """
@@ -32,19 +30,16 @@ class Habit:
         :return: calls the add_habit function with the habit object
         """
         add_session(db, self.habit_name, session_date)
-
         
     def increment_streak_count(self):
         """ Increments the count of a streak when a session of a habit was completed
         within the specified periodicity. """
         self.streak_count += 1
-
         
     def reset_streak_count(self):
         """ Sets the count of a streak to zero when a session of a habit was not completed
         within the specified periodicity. """
         self.streak_count = 0
-
         
     def delete_habit(self, db, habit_name):
         """
