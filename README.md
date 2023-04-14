@@ -10,7 +10,7 @@ Your tracker to rekindle self-love by
 
 - create, delete and add a completed session of your own custom daily and weekly habits
 - view all defined habits or those with the same periodicity
-- check your progress: view your longest streak of a certain or all habits
+- check your progress: view your longest run streak of a certain or all habits
 - test those analysing functionalities and get inspired before creating any data with some predefined habits with example tracking data of four weeks
 
 ## Installation
