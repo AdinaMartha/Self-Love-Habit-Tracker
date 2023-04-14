@@ -7,8 +7,8 @@ import os
 class TestHabit:
     def setup_method(self):
         """
-
-        :return:
+        Feeds the tables with the test data on the test file.
+        :return: test.db file with habits and sessions data added
         """
         self.db = get_db("test.db")
 
@@ -89,6 +89,10 @@ class TestHabit:
         add_session(self.db, "set priorities", "2022-09-25")
 
     def test_habits(self):
+        """
+        Defines the test habits.
+        :return: test habits stored in the DB, able to be used in the Habit class
+        """
         habit = Habit("fulfill need", "Ask yourself: ‘What do I need the most today?' and fulfill this need.",
                       "daily")
         habit.store_habit(self.db)
@@ -108,6 +112,10 @@ class TestHabit:
         habit.store_habit(self.db)
 
     def test_db_habits(self):
+        """
+        Tests the storage of the test habits and sessions data.
+        :return: confirmation of the assertments of the number of sessions of each habit entered
+        """
         session_count_data = get_sessions_data(self.db, "fulfill need")
         assert len(session_count_data) == 18
 
@@ -139,5 +147,9 @@ class TestHabit:
         assert count == 4
 
     def teardown_method(self):
+        """
+        Tears the set up test case down.
+        :return: closed database and removed test file
+        """
         self.db.close()
         os.remove("test.db")
