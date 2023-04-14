@@ -148,7 +148,7 @@ class TestHabit:
 
     def teardown_method(self):
         """
-        Tears the set up test case down.
+        Tears the test case setup down.
         :return: closed database and removed test file
         """
         self.db.close()
